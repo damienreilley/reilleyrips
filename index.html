@@ -70,7 +70,7 @@ var S={set:null,fi:null,ci:null,vs:[]};
 var TYPE={Base:['ðŸƒ','Regular card'],Insert:['âœ¨','Special insert card'],Autograph:['âœï¸','Signed card (autograph)'],Memorabilia:['ðŸ‘•','Has a piece of jersey, patch, hat or glove']};
 var ORDER={Base:0,Insert:1,Autograph:2,Memorabilia:3};
 function $(i){return document.getElementById(i);}
-function norm(s){return String(s).normalize('NFD').replace(/[Ì€-Í¯]/g,'').toLowerCase();}
+function norm(s){return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 function versionsFor(f,c){if(c.r){return Object.keys(c.r).map(function(v){var run=c.r[v];return {v:v,run:run?(+run===1?'1/1':'/'+run):'',nums:run?[+run]:[]};});}return f.versions;}
 function cands(si,q){var tok=norm(q).replace(/[#,]/g,' ').split(/\s+/).filter(Boolean),nums=tok.filter(function(t){return /^\d+$/.test(t);}),words=tok.filter(function(t){return !/^\d+$/.test(t);}),out=[];if(!tok.length)return out;
