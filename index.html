@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow">
-<title>Reilley's Rip</title>
+<title>What did you pull?</title>
 <style>
 :root{--bg:#f5efe0;--surface:#fffdf5;--surface2:#ebe3cd;--fg:#1a1d18;--muted:#4f4e45;--border:#bdb293;--accent:#8f261f;--accentfg:#fffdf5;--gold:#7a5a14;--ok:#1f5a2b}
 *{box-sizing:border-box}html,body{margin:0;overflow-x:hidden}
@@ -46,13 +46,23 @@ table{width:100%;border-collapse:collapse;margin-top:12px;font-size:16px}td{padd
 .note{color:var(--muted);font-size:14px;margin:10px 0 0}
 [hidden]{display:none!important}
 @media(max-width:380px){h1{font-size:29px}.cards{grid-template-columns:1fr 1fr}.vc svg{width:92px}}
+.brws{display:flex;flex-direction:column;gap:8px;margin:12px 0 10px}
+.brws .br{display:block;width:100%;min-height:52px;padding:12px 16px;font:600 15px/1.2 inherit;text-align:left;background:var(--surface2,#f1e9d2);color:var(--ink,#2a241a);border:1.5px solid var(--border,#c7b996);border-radius:10px;cursor:pointer}
+.brws .br.on{background:var(--accent,#8b2a2a);color:#fff;border-color:var(--accent,#8b2a2a)}
+.brws .br:active{transform:translateY(1px)}
+.brws-sub{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px}
+.brws-sub .sb{min-height:40px;padding:8px 12px;font:500 14px inherit;background:var(--surface,#fdf6e4);border:1px solid var(--border,#c7b996);border-radius:8px;cursor:pointer}
+.brws-sub .sb.on{background:var(--accent,#8b2a2a);color:#fff;border-color:var(--accent,#8b2a2a)}
+.crumbs{font-size:13px;color:var(--muted,#6a5f48);margin:4px 0 8px}
+.crumbs a{color:var(--accent,#8b2a2a);text-decoration:underline;cursor:pointer}
 </style></head><body>
 <div class="wrap">
 <header><div class="eyebrow">Card Finder</div><h1>What did you pull?</h1><p class="sub">Answer a few questions. We tell you exactly what the card is.</p></header>
 
 <div class="step" id="s1"><span class="num">Question 1</span><h2>Which pack did it come from?</h2><div class="choices" id="sets"></div></div>
 
-<div class="step" id="s2" hidden><span class="num">Question 2</span><h2>Flip the card over. What is the card number?</h2><p class="hint">It is a small number on the back. You can also type the player's last name.</p>
+<div class="step" id="s2" hidden><span class="num">Question 2</span><h2>Flip the card over. What is the card number?</h2><p class="hint">Pick a way to find the card. Any of these works.</p>
+<div class="brws" id="brws"><button type="button" data-br="num" class="br on">Type number or name</button><button type="button" data-br="player">Browse by player A-Z</button><button type="button" data-br="team">Browse by team</button><button type="button" data-br="design">Browse by design</button></div>
 <div id="qwrap"><input id="q" type="search" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="number or name" enterkeyhint="search"><div class="list" id="cl"></div></div>
 <div class="picked" id="picked" hidden></div></div>
 
@@ -109,4 +119,83 @@ function init(){D.forEach(function(s,i){var b=document.createElement('button');b
  $('q').addEventListener('input',onQ);
  document.addEventListener('click',function(e){var r=e.target.closest('.row');if(r){pickCard(+r.dataset.fi,+r.dataset.ci);return;}var a=e.target.closest('[data-a]');if(a){show($('fin'),false);if(a.dataset.a==='yes')askRun(4);else askLook(S.vs.filter(function(v){return !v.nums.length;}),4);return;}var n=e.target.closest('.run');if(n){pickRun(+n.dataset.n);return;}var v=e.target.closest('.vc');if(v){finish(S.vs[+v.dataset.v]);return;}if(e.target.id==='chg'){resetCard();$('q').focus();return;}if(e.target.id==='next'){resetCard();go($('s2'));$('q').focus();}});}
 if(typeof document!=='undefined')init();
-</script></body></html>
+</script><script>
+(function(){
+  var S2 = {mode:'num', group:null};
+  function h(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function ic(type){var T={Base:'base',Insert:'insert',Autograph:'auto',Memorabilia:'mem'}; var E={base:'\u{1F0CF}',insert:'\u2728',auto:'\u270D\uFE0F',mem:'\u{1F455}'}; return E[T[type]||'base'];}
+  function rowBtn(fi, ci, fam, card){
+    return '<button type="button" class="row" data-fi="'+fi+'" data-ci="'+ci+'"><span class="ic">'+ic(fam.type)+'</span><span><b>#'+h(card.n)+' '+h(card.a)+'</b><span class="s">'+h(fam.name)+' \u00b7 '+h(card.t||'')+'</span></span></button>';
+  }
+  function renderList(items, note){
+    var cl = document.getElementById('cl');
+    var out = note ? '<p class="note">'+note+'</p>' : '';
+    if(!items.length){ out += '<p class="note">No cards.</p>'; cl.innerHTML = out; return; }
+    out += items.map(function(x){return rowBtn(x.fi, x.ci, x.f, x.c);}).join('');
+    cl.innerHTML = out;
+  }
+  function allCards(){
+    var si = (window.S && typeof S.set==='number') ? S.set : 0;
+    var out = [];
+    if(!window.D || !D[si]) return out;
+    D[si].families.forEach(function(f, fi){ f.cards.forEach(function(c, ci){ out.push({fi:fi, ci:ci, f:f, c:c}); }); });
+    return out;
+  }
+  function byPlayer(){
+    var items = allCards().slice().sort(function(a,b){ return String(a.c.a||'').toLowerCase().localeCompare(String(b.c.a||'').toLowerCase()); });
+    renderList(items, items.length+' cards, sorted by player. Tap one.');
+  }
+  function groupBy(keyFn, label){
+    var map = {}, order = [];
+    allCards().forEach(function(x){ var k = keyFn(x); if(!map[k]){ map[k]=[]; order.push(k); } map[k].push(x); });
+    order.sort();
+    var cl = document.getElementById('cl');
+    if(S2.group && map[S2.group]){
+      cl.innerHTML = '<p class="crumbs"><a data-crumb="back">All '+label+'s</a> \u203a '+h(S2.group)+' ('+map[S2.group].length+' cards)</p>' +
+        map[S2.group].map(function(x){return rowBtn(x.fi, x.ci, x.f, x.c);}).join('');
+      return;
+    }
+    cl.innerHTML = '<p class="note">Tap a '+label+' to see its cards.</p><div class="brws-sub">' +
+      order.map(function(k){return '<button type="button" class="sb" data-group="'+h(k)+'">'+h(k)+' <small>('+map[k].length+')</small></button>';}).join('') + '</div>';
+  }
+  function byTeam(){ groupBy(function(x){ return x.c.t || '(no team)'; }, 'team'); }
+  function byDesign(){ groupBy(function(x){ return x.f.name || '(unknown)'; }, 'design'); }
+  function render(){
+    var qwrap = document.getElementById('qwrap');
+    var cl = document.getElementById('cl');
+    if(S2.mode === 'num'){
+      qwrap.style.display = '';
+      cl.innerHTML = '';
+      S2.group = null;
+      return;
+    }
+    qwrap.style.display = 'none';
+    if(S2.mode === 'player') byPlayer();
+    else if(S2.mode === 'team') byTeam();
+    else if(S2.mode === 'design') byDesign();
+  }
+  document.addEventListener('click', function(e){
+    var br = e.target.closest('.brws [data-br]');
+    if(br){
+      S2.mode = br.dataset.br; S2.group = null;
+      [].forEach.call(document.querySelectorAll('.brws .br'), function(b){ b.classList.toggle('on', b.dataset.br === S2.mode); });
+      render(); return;
+    }
+    var sb = e.target.closest('.brws-sub [data-group]');
+    if(sb){ S2.group = sb.dataset.group; render(); return; }
+    var cr = e.target.closest('[data-crumb="back"]');
+    if(cr){ S2.group = null; render(); return; }
+  });
+  // reset on pack change: wrap original pickSet
+  var _ps = window.pickSet;
+  if(typeof _ps === 'function'){
+    window.pickSet = function(i){
+      _ps.apply(this, arguments);
+      S2.mode = 'num'; S2.group = null;
+      [].forEach.call(document.querySelectorAll('.brws .br'), function(b){ b.classList.toggle('on', b.dataset.br === 'num'); });
+      var qw = document.getElementById('qwrap'); if(qw) qw.style.display = '';
+    };
+  }
+})();
+</script>
+</body></html>
