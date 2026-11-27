@@ -1,0 +1,63 @@
+[
+  {
+    "slug": "stars-stripes",
+    "title": "2026 Panini USA Baseball Stars & Stripes Prizm",
+    "btn": "USA Baseball",
+    "small": "Stars & Stripes Prizm",
+    "em": "🇺🇸",
+    "file": "data/stars-stripes.json",
+    "meta": {
+      "year": "2026",
+      "brand": "Panini",
+      "line": "Prizm USA Stars & Stripes",
+      "sport": "Baseball",
+      "program": "USA Baseball",
+      "release": "April 3, 2026",
+      "uniqueCards": 1246,
+      "totalWithParallels": 14872,
+      "baseCards": 200,
+      "autoCards": 494,
+      "matCards": 442,
+      "insertCards": 110,
+      "baseParallels": 37,
+      "autoParallels": 16,
+      "insertParallels": 10,
+      "links": {
+        "checklist": "checklist.html",
+        "sellSheet": "https://www.beckett.com/news/2026-panini-stars-stripes-prizm-usa-baseball-cards/",
+        "beckettGuide": "https://www.beckett.com/news/2026-panini-stars-stripes-prizm-usa-baseball-cards/"
+      },
+      "sources": [
+        "Beckett.com",
+        "BaseballCardPedia.com",
+        "DiamondCardsOnline.com",
+        "ChecklistCenter.com",
+        "SiteLiftMedia.com"
+      ]
+    }
+  },
+  {
+    "slug": "halloween",
+    "title": "2026 Score-A-Treat Multi-Sport (Panini Halloween)",
+    "btn": "Halloween",
+    "small": "Score-A-Treat",
+    "em": "🎃",
+    "file": "data/halloween.json",
+    "meta": {
+      "year": "2026",
+      "brand": "Panini",
+      "line": "Score-A-Treat",
+      "sport": "Multi-Sport",
+      "program": "Halloween",
+      "release": "2026",
+      "uniqueCards": 641,
+      "baseCards": 297,
+      "autoCards": 297,
+      "insertCards": 47,
+      "links": {},
+      "sources": [
+        "Two checklist sites, compared card by card"
+      ]
+    }
+  }
+]
