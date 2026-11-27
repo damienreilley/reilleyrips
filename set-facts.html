@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Set Facts - 2026 Stars &amp; Stripes Prizm</title>
+<style>
+:root{--bg:#f4ecd8;--surface:#fffaf0;--surface2:#f0e6cf;--fg:#2a1a12;--muted:#7a6a55;--accent:#8b1a1a;--border:#ddcdaa}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+.wrap{max-width:760px;margin:0 auto;padding:14px}
+.back{display:inline-block;margin:4px 0 12px;padding:9px 16px;background:var(--accent);color:#fff;border-radius:10px;text-decoration:none;font-weight:700;font-size:14px}
+h1{font:800 24px/1.2 Georgia,serif;color:var(--accent);margin:2px 0}
+.sub{color:var(--muted);margin:0 0 14px;font-size:14px}
+h2{font:800 16px/1.2 Georgia,serif;color:var(--accent);margin:18px 0 8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px}
+.stat .n{font:800 20px/1 inherit;color:var(--accent)}
+.stat .l{font-size:13px;color:var(--muted);margin-top:3px}
+table{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--border);font-size:14px}
+th{background:var(--accent);color:#fff}
+tr:last-child td{border-bottom:none}
+td.c{text-align:right;font-weight:700;color:var(--accent);width:60px}
+.foot{text-align:center;padding:16px 0;font-size:12px;color:var(--muted)}.foot a{color:var(--accent);font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a class="back" href="index.html">&larr; Back to Card Finder</a>
+<h1>Set Facts</h1>
+<p class="sub">2026 Stars &amp; Stripes Prizm &middot; computed from the full checklist</p>
+
+<div class="grid" id="totals"></div>
+
+<h2>Most cards in the set &mdash; players</h2>
+<table id="players"><tbody><tr><td>Loading&hellip;</td></tr></tbody></table>
+
+<h2>Most cards &mdash; teams / programs</h2>
+<table id="teams"><tbody><tr><td>Loading&hellip;</td></tr></tbody></table>
+
+<div class="foot">
+<a href="index.html">Card Finder</a> &middot; <a href="checklist.html">Checklist</a> &middot; <a href="box-comparison.html">Box Breakdown</a> &middot; <a href="logger.html">My Pulls</a>
+</div>
+</div>
+
+<script>
+(function(){
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  fetch('data/stars-stripes.json?v='+Date.now()).then(function(r){return r.json();}).then(function(d){
+    var fams=d.families||[];
+    function cnt(t){return fams.filter(function(f){return f.type===t;}).reduce(function(a,f){return a+(f.cards?f.cards.length:0);},0);}
+    function nsets(t){return fams.filter(function(f){return f.type===t;}).length;}
+    var base=cnt('Base'),ins=cnt('Insert'),au=cnt('Autograph'),rel=cnt('Memorabilia');
+    var uniq=base+ins+au+rel;
+    document.getElementById('totals').innerHTML=[
+      ['n','Unique cards',uniq.toLocaleString()],
+      ['n','Base',base],
+      ['n','Inserts ('+nsets('Insert')+' sets)',ins],
+      ['n','Autographs ('+nsets('Autograph')+' sets)',au],
+      ['n','Relic ('+nsets('Memorabilia')+' sets)',rel],
+      ['n','Parallel types','37 base']
+    ].map(function(s){return '<div class="stat"><div class="n">'+s[2]+'</div><div class="l">'+esc(s[1])+'</div></div>';}).join('');
+
+    var pc={},tc={};
+    fams.forEach(function(f){(f.cards||[]).forEach(function(c){
+      if(c.a){pc[c.a]=(pc[c.a]||0)+1;}
+      if(c.t){tc[c.t]=(tc[c.t]||0)+1;}
+    });});
+    function top(obj){return Object.keys(obj).map(function(k){return [k,obj[k]];}).sort(function(a,b){return b[1]-a[1]||a[0].localeCompare(b[0]);}).slice(0,10);}
+    function rows(list){return list.map(function(x){return '<tr><td>'+esc(x[0])+'</td><td class="c">'+x[1]+'</td></tr>';}).join('');}
+    document.getElementById('players').innerHTML='<thead><tr><th>Player</th><th class="c">Cards</th></tr></thead><tbody>'+rows(top(pc))+'</tbody>';
+    document.getElementById('teams').innerHTML='<thead><tr><th>Team / program</th><th class="c">Cards</th></tr></thead><tbody>'+rows(top(tc))+'</tbody>';
+  }).catch(function(){ document.getElementById('players').innerHTML='<tbody><tr><td>Could not load the checklist. Refresh to try again.</td></tr></tbody>'; });
+})();
+</script>
+</body>
+</html>
