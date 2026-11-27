@@ -164,12 +164,12 @@ if(typeof document!=='undefined')init();
     var qwrap = document.getElementById('qwrap');
     var cl = document.getElementById('cl');
     if(S2.mode === 'num'){
-      qwrap.style.display = '';
+      document.getElementById('q').style.display='';
       cl.innerHTML = '';
       S2.group = null;
       return;
     }
-    qwrap.style.display = 'none';
+    document.getElementById('q').style.display='none';
     if(S2.mode === 'player') byPlayer();
     else if(S2.mode === 'team') byTeam();
     else if(S2.mode === 'design') byDesign();
@@ -193,7 +193,7 @@ if(typeof document!=='undefined')init();
       _ps.apply(this, arguments);
       S2.mode = 'num'; S2.group = null;
       [].forEach.call(document.querySelectorAll('.brws .br'), function(b){ b.classList.toggle('on', b.dataset.br === 'num'); });
-      var qw = document.getElementById('qwrap'); if(qw) qw.style.display = '';
+      var qw = document.getElementById('qwrap'); if(qw) var qi=document.getElementById('q'); if(qi) qi.style.display='';
     };
   }
 })();
