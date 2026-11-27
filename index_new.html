@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Reilley's Rip &#8212; Card Finder</title>
+<style>
+:root{--bg:#f5efe0;--surface:#fffdf5;--surface2:#ebe3cd;--fg:#1a1d18;--muted:#4f4e45;--border:#bdb293;--accent:#8f261f;--accentfg:#fffdf5;--gold:#7a5a14;--ok:#1f5a2b}
+*{box-sizing:border-box}html,body{margin:0;overflow-x:hidden}
+body{background:var(--bg);color:var(--fg);font:17px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:720px;margin:0 auto;padding:16px 14px 70px}
+header{text-align:center;margin-bottom:16px}
+.eyebrow{font:700 12px/1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+h1{font:900 34px/1.05 Georgia,"Times New Roman",serif;margin:0;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:6px 0 0}
+.step{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:14px}
+.num{font:700 12px/1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+h2{font:700 23px/1.2 Georgia,serif;margin:6px 0 4px}
+.hint{color:var(--muted);font-size:15px;margin:0 0 12px}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.choice,.yn button,.row,.big,.run{font-family:inherit;cursor:pointer;color:var(--fg)}
+.choice{background:var(--bg);border:2px solid var(--border);border-radius:12px;padding:14px 8px;min-height:110px;font-weight:800;font-size:17px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center}
+.choice .em{font-size:34px;line-height:1}.choice small{font-weight:600;font-size:13px;color:var(--muted)}
+.choice.on{background:var(--accent);border-color:var(--accent);color:var(--accentfg)}.choice.on small{color:var(--accentfg)}
+input{width:100%;min-height:60px;font:700 24px/1 inherit;padding:8px 14px;border:3px solid var(--border);border-radius:12px;background:#fff;color:var(--fg);text-align:center}
+input:focus{outline:none;border-color:var(--accent)}
+.list{margin-top:12px;display:grid;gap:8px}
+.row{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:var(--bg);border:2px solid var(--border);border-radius:12px;padding:10px 12px;min-height:60px;font-size:16px}
+.row .ic{font-size:26px;width:34px;text-align:center;flex-shrink:0}.row b{display:block;font-size:18px}.row span.s{color:var(--muted);font-size:14px}
+.picked{background:var(--surface2);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px}
+.picked .t{flex:1;min-width:0}.picked b{font-size:18px}.link{background:none;border:0;color:var(--accent);font:700 15px inherit;text-decoration:underline;cursor:pointer;min-height:44px;padding:0 6px}
+.yn{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.yn button{padding:18px 8px;min-height:92px;border:2px solid var(--border);border-radius:12px;background:var(--bg);font:700 22px Georgia,serif;display:flex;flex-direction:column;align-items:center;gap:4px}
+.yn small{font:500 13px -apple-system,"Segoe UI",Arial,sans-serif;color:var(--muted)}
+.runs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.run{min-width:84px;min-height:54px;font:700 20px ui-monospace,Menlo,Consolas,monospace;border:2px solid var(--border);border-radius:999px;background:var(--bg);padding:6px 14px}
+.run.on{background:var(--accent);border-color:var(--accent);color:var(--accentfg)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:12px}
+.vc{background:var(--bg);border:2px solid var(--border);border-radius:12px;padding:10px;text-align:center;font-family:inherit;color:var(--fg);cursor:pointer}
+.vc svg{width:104px;height:auto;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,.18)}.vc b{display:block;margin-top:6px;font-size:16px;line-height:1.2}.vc .pr{font:700 14px ui-monospace,Menlo,monospace;color:var(--accent)}
+.tag{display:inline-block;margin-top:4px;padding:2px 8px;border-radius:10px;background:var(--surface2);font-size:12px;font-weight:700;color:var(--fg)}
+.final{border:3px solid var(--ok);background:#fff}
+.final .top{display:flex;gap:14px;align-items:center;flex-wrap:wrap;justify-content:center}
+.final svg{width:150px;height:auto;border-radius:7px;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.final h3{font:900 26px/1.1 Georgia,serif;margin:0 0 4px}.final .ver{font-size:20px;font-weight:800;color:var(--accent)}
+.rare{margin:10px 0 0;padding:10px 12px;border-radius:10px;background:#e6f3e6;border:1px solid var(--ok);font-weight:800;font-size:18px;text-align:center}
+table{width:100%;border-collapse:collapse;margin-top:12px;font-size:16px}td{padding:7px 4px;border-top:1px solid var(--border);vertical-align:top}td:first-child{color:var(--muted);width:38%}
+.big{display:block;width:100%;min-height:58px;margin-top:14px;border:0;border-radius:12px;background:var(--accent);color:var(--accentfg);font:800 19px inherit}
+.note{color:var(--muted);font-size:14px;margin:10px 0 0}
+[hidden]{display:none!important}
+@media(max-width:380px){h1{font-size:29px}.cards{grid-template-columns:1fr 1fr}.vc svg{width:92px}}
+.brws{display:flex;flex-direction:column;gap:8px;margin:12px 0 10px}
+.brws .br{display:block;width:100%;min-height:52px;padding:12px 16px;font:600 15px/1.2 inherit;text-align:left;background:var(--surface2);color:var(--fg);border:1.5px solid var(--border);border-radius:10px;cursor:pointer}
+.brws .br.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.brws .br:active{transform:translateY(1px)}
+.brws-sub{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px}
+.brws-sub .sb{min-height:40px;padding:8px 12px;font:500 14px inherit;background:var(--surface);border:1px solid var(--border);border-radius:8px;cursor:pointer}
+.brws-sub .sb.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.crumbs{font-size:13px;color:var(--muted);margin:4px 0 8px}
+.crumbs a{color:var(--accent);text-decoration:underline;cursor:pointer}

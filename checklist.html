@@ -124,7 +124,13 @@ tr:nth-child(even){background:rgba(255,255,255,.5)}tr:hover{background:#e8dcc4}
     head.parentElement.classList.toggle('collapsed');
   });
 
-  // Search: show all sections, filter rows
+  // no-results banner
+  var noRes=document.createElement('div');
+  noRes.id='noRes';
+  noRes.style.cssText='display:none;padding:14px 16px;margin:10px 0;background:var(--surface);border:1px solid var(--border);border-radius:10px;font:600 15px inherit;color:var(--fg);text-align:center';
+  (filters.parentNode||document.body).insertBefore(noRes, filters.nextSibling);
+
+  // Search: filter rows, hide empty sub-tables and sections
   search.addEventListener('input', function(e){
     var q=e.target.value.toLowerCase().trim();
     if(q){
@@ -136,6 +142,30 @@ tr:nth-child(even){background:rgba(255,255,255,.5)}tr:hover{background:#e8dcc4}
     document.querySelectorAll('tbody tr').forEach(function(row){
       row.style.display=(!q||row.textContent.toLowerCase().indexOf(q)>=0)?'':'none';
     });
+    if(!q){
+      document.querySelectorAll('table').forEach(function(t){
+        t.style.display='';
+        var h=t.previousElementSibling;
+        if(h&&h.tagName==='H3') h.style.display='';
+      });
+      noRes.style.display='none';
+      apply('all');
+      return;
+    }
+    var total=0;
+    document.querySelectorAll('table').forEach(function(t){
+      var vis=Array.prototype.filter.call(t.querySelectorAll('tbody tr'),function(r){return r.style.display!=='none';}).length;
+      total+=vis;
+      t.style.display = vis? '' : 'none';
+      var h=t.previousElementSibling;
+      if(h&&h.tagName==='H3') h.style.display = vis? '' : 'none';
+    });
+    secs.forEach(function(s){
+      var any=Array.prototype.some.call(s.querySelectorAll('tbody tr'),function(r){return r.style.display!=='none';});
+      s.hidden=!any;
+    });
+    if(total===0){ noRes.textContent='No cards match "'+e.target.value.trim()+'". Clear the box to see the full list.'; noRes.style.display=''; }
+    else noRes.style.display='none';
   });
 
   apply('all');  // default state
