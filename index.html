@@ -163,26 +163,11 @@ function showSetInfo(i){
  h+='<br>Release Date: '+esc(m.release||'TBD')+' &middot; Checklist updated Nov 26';
  h+='<br>'+esc(s.title)+' checklist: '+(m.uniqueCards?m.uniqueCards.toLocaleString():'?')+' cards in '+s.families.length+' sets, with print runs for Hobby and H2, released '+(m.release||'TBD')+'.';
  h+='</div>';
-
- // Tags
- h+='<div class="set-tags">';
- h+='<span class="stag">'+esc(s.title)+'</span>';
- h+='<span class="stag">Hobby</span><span class="stag">H2</span><span class="stag">Mega</span><span class="stag">Blaster</span><span class="stag">Factory Set</span>';
- h+='</div>';
-
  // Links
  h+='<div class="set-links">';
  if(m.links&&m.links.checklist)h+='<a href="'+m.links.checklist+'" target="_blank">&#128203; Full Checklist</a>';
  if(m.links&&m.links.sellSheet)h+='<a href="'+m.links.sellSheet+'" target="_blank" class="sec">&#128196; Checklist &amp; Odds</a>';
  h+='</div>';
-
- // Box config table
- h+='<table class="box-cfg"><tr><th></th><th>Hobby</th><th>H2</th><th>Mega</th><th>Blaster</th></tr>';
- h+='<tr><td>Packs &times; cards</td><td>12&times;12</td><td>12&times;5</td><td>10&times;4</td><td>6&times;4</td></tr>';
- h+='<tr><td>Cards per box</td><td>144</td><td>60</td><td>40</td><td>24</td></tr>';
- h+='<tr><td>Hits (avg)</td><td>6 auto/mem</td><td>3 auto</td><td>3 auto/mem</td><td>2 auto/mem</td></tr>';
- h+='</table>';
-
  // Stats grid
  h+='<div class="set-stats">';
  if(m.baseCards)h+='<div class="st"><span class="n">'+m.baseCards+'</span><span class="l">Base</span></div>';
@@ -210,26 +195,11 @@ function showSetInfo(i){
  h+='<br>Release Date: '+esc(m.release||'TBD')+' &middot; Checklist updated Nov 26';
  h+='<br>'+esc(s.title)+' checklist: '+(m.uniqueCards?m.uniqueCards.toLocaleString():'?')+' cards in '+s.families.length+' sets, with print runs for Hobby and H2, released '+(m.release||'TBD')+'.';
  h+='</div>';
-
- // Tags
- h+='<div class="set-tags">';
- h+='<span class="stag">'+esc(s.title)+'</span>';
- h+='<span class="stag">Hobby</span><span class="stag">H2</span><span class="stag">Mega</span><span class="stag">Blaster</span><span class="stag">Factory Set</span>';
- h+='</div>';
-
  // Links
  h+='<div class="set-links">';
  if(m.links&&m.links.checklist)h+='<a href="'+m.links.checklist+'" target="_blank">&#128203; Full Checklist</a>';
  if(m.links&&m.links.sellSheet)h+='<a href="'+m.links.sellSheet+'" target="_blank" class="sec">&#128196; Checklist &amp; Odds</a>';
  h+='</div>';
-
- // Box config table
- h+='<table class="box-cfg"><tr><th></th><th>Hobby</th><th>H2</th><th>Mega</th><th>Blaster</th></tr>';
- h+='<tr><td>Packs &times; cards</td><td>12&times;12</td><td>12&times;5</td><td>10&times;4</td><td>6&times;4</td></tr>';
- h+='<tr><td>Cards per box</td><td>144</td><td>60</td><td>40</td><td>24</td></tr>';
- h+='<tr><td>Hits (avg)</td><td>6 auto/mem</td><td>3 auto</td><td>3 auto/mem</td><td>2 auto/mem</td></tr>';
- h+='</table>';
-
  // Stats grid
  h+='<div class="set-stats">';
  if(m.baseCards)h+='<div class="st"><span class="n">'+m.baseCards+'</span><span class="l">Base</span></div>';
