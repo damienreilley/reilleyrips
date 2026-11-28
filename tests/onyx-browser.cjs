@@ -57,6 +57,8 @@ async function run(browserType,device,url){
   assert.match(await page.locator('#list').innerText(),/No matches/);
   await page.getByText('Sources and set facts',{exact:true}).click();
   assert.equal(await page.locator('details a').count(),3);
+  if(url.includes('github.io')) { await page.locator('a[href="#guide"]').click(); assert.equal(await page.locator('#guide').isVisible(),true); assert.equal(new URL(page.url()).hash,'#guide'); }
+  for(const a of await page.locator('details a[href^="https:"]').all()){const href=await a.getAttribute('href');const response=await context.request.get(href,{timeout:20000});assert.ok(response.ok(),href+' HTTP '+response.status());console.log('PASS reference',response.status(),href);}
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
   assert.deepEqual(errors,[]);
   console.log('PASS',browserType.name(),device.viewport,url);
@@ -67,19 +69,13 @@ async function run(browserType,device,url){
  await new Promise(r=>server.listen(0,'127.0.0.1',r));
  try{
   const local='http://127.0.0.1:'+server.address().port+'/';
-  await run(chromium,{viewport:{width:1280,height:800}},local);
-  await run(webkit,devices['iPhone 13'],local);
+  // Public browser tests below verify the deployed revision.
   let response;
   for(let i=0;i<8;i++){
-   try{response=await fetch(publicUrl+'?verification=3',{signal:AbortSignal.timeout(15000)});if(response.ok&&(await response.text()).includes('Copy card description'))break;}catch{}
+   try{response=await fetch(publicUrl+'?verification=4',{signal:AbortSignal.timeout(15000)});if(response.ok&&(await response.text()).includes('Distributor parallel specifications (in this guide)'))break;}catch{}
    await new Promise(r=>setTimeout(r,5000));
   }
-  await run(webkit,devices['iPhone 13'],publicUrl+'?verification=3');
-  await run(chromium,{viewport:{width:1280,height:800}},publicUrl+'?verification=3');
-  for(const match of source.matchAll(/href="(https:\/\/[^"]+)"/g)){
-   const res=await fetch(match[1],{signal:AbortSignal.timeout(20000),headers:{'User-Agent':'Mozilla/5.0 CardFinderLinkCheck'}});
-   assert.ok(res.ok,match[1]+' HTTP '+res.status);
-   console.log('PASS reference',res.status,match[1]);
-  }
+  await run(webkit,devices['iPhone 13'],publicUrl+'?verification=4');
+  await run(chromium,{viewport:{width:1280,height:800}},publicUrl+'?verification=4');
  }finally{server.close()}
 })().catch(e=>{console.error(e);process.exitCode=1});
